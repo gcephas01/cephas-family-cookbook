@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4b285f">
+<title>Cephas Family Cookbook</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Family Cookbook">
+<meta name="application-name" content="Family Cookbook">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
+<style>
+:root {
+  font-family:Georgia,serif;
+  color:#382b40;
+  background:#f8f4e9}
+* {
+  box-sizing:border-box}
+body {
+  margin:0}
+button,input,textarea,select {
+  font:inherit}
+button {
+  cursor:pointer;
+  border:0;
+  border-radius:12px;
+  padding:11px 15px;
+  background:#70428c;
+  color:white}
+button.secondary {
+  background:#eee5f2;
+  color:#4b285f}
+button.danger {
+  background:#9a3f34}
+input,textarea,select {
+  width:100%;
+  padding:11px;
+  border:1px solid #d3cebf;
+  border-radius:10px;
+  background:#fffdf8}
+label {
+  display:block;
+  font-weight:bold;
+  font-size:13px;
+  margin:12px 0 5px}
+header {
+  background:#4b285f;
+  color:#fff8e8;
+  padding:22px max(18px,calc((100vw - 1080px)/2));
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px}
+header h1 {
+  font-size:25px;
+  margin:0}
+header small {
+  color:#e9ddf0}
+main {
+  max-width:1080px;
+  margin:25px auto;
+  padding:0 16px}
+nav {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:22px}
+nav button {
+  background:#e9ddf0;
+  color:#4b285f}
+nav button.active {
+  background:#70428c;
+  color:white}
+.panel,.recipe {
+  background:#fffdf7;
+  border:1px solid #e4ddcd;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 3px 12px #4b285f10}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(245px,1fr));
+  gap:16px}
+.recipe {
+  display:flex;
+  flex-direction:column;
+  gap:10px}
+.recipe h3 {
+  margin:0;
+  font-size:22px}
+.recipe p {
+  margin:0;
+  color:#666}
+.recipe .actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:auto}
+.recipe .actions button {
+  font-size:13px;
+  padding:9px 11px}
+.pill {
+  display:inline-block;
+  font:12px system-ui;
+  background:#e9ddf0;
+  padding:5px 9px;
+  border-radius:100px;
+  width:max-content}
+.muted {
+  color:#6b7068}
+.row {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap}
+.between {
+  justify-content:space-between}
+.hidden {
+  display:none!important}
+.section {
+  margin-bottom:20px}
+.form-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:0 15px}
+textarea {
+  min-height:100px}
+h2 {
+  margin-top:0}
+h3 {
+  margin-bottom:7px}
+.item {
+  padding:12px 0;
+  border-bottom:1px solid #ece6da;
+  display:flex;
+  gap:10px;
+  align-items:center}
+.item input[type=checkbox] {
+  width:auto}
+.item.done span {
+  text-decoration:line-through;
+  color:#8b8b8b}
+.notice {
+  padding:12px;
+  border-radius:10px;
+  background:#eee5f2;
+  margin:12px 0}
+#auth {
+  max-width:420px;
+  margin:65px auto}
+.recipe-photo {
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:12px;
+  background:#ede4d2}
+.small {
+  font:13px system-ui}
+.error {
+  color:#a22}
+footer {
+  padding:20px;
+  text-align:center;
+  color:#766b79;
+  font:12px system-ui}
+@media(max-width:560px) {
+  header {
+  padding:18px}
+header h1 {
+  font-size:20px}
+.panel {
+  padding:15px}
+}
+.import-panel{background:#f2e9f5;border:1px solid #dcc8e6;border-radius:16px;padding:18px;margin-bottom:22px}
+.import-panel h3{margin:0 0 8px;color:#4b285f}
+.import-panel .actions{margin:12px 0;display:flex;gap:8px;flex-wrap:wrap}
+.import-panel input[type=file]{background:#fff}
+#importRaw{min-height:145px}
+</style>
+</head>
+<body>
+<header>
+<div>
+<small>RECIPES WORTH KEEPING</small>
+<h1>Cephas Family Cookbook</h1>
+</div>
+<button id="logout" class="secondary hidden">Sign out</button>
+</header>
+<main>
+<section id="auth" class="panel">
+<h2>Welcome home 🍲</h2>
+<p class="muted">Sign in with one of your two approved family accounts.</p>
+<form id="loginForm">
+<label>Email</label>
+<input id="email" type="email" autocomplete="username" required>
+<label>Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<p>
+<button type="submit">Sign in</button>
+</p>
+<p id="loginError" class="error small" role="alert">
+</p>
+</form>
+</section>
+<div id="app" class="hidden">
+<nav>
+<button data-tab="cookbook" class="active">📖 Cookbook</button>
+<button data-tab="plan">🍽️ Making This <span id="planCount">
+</span>
+</button>
+<button data-tab="grocery">🛒 Grocery List</button>
+<button data-tab="editor">＋ Add Recipe</button>
+</nav>
+<p id="status" class="small muted" role="status">
+</p>
+<section id="cookbook" class="view">
+<div class="row between section">
+<div>
+<h2>Our recipes</h2>
+<p class="muted">Family favorites and recipes in the Test Kitchen.</p>
+</div>
+<input id="search" placeholder="Search recipes…" style="max-width:260px">
+</div>
+<div id="recipes" class="grid">
+</div>
+</section>
+<section id="plan" class="view hidden">
+<div class="panel">
+<h2>Making This</h2>
+<p class="muted">Pick recipes from the cookbook. Adjust servings here before shopping.</p>
+<div id="planList">
+</div>
+<p>
+<button id="goGroceries">Build grocery list →</button>
+</p>
+</div>
+</section>
+<section id="grocery" class="view hidden">
+<div class="panel">
+<div class="row between">
+<h2>Grocery List</h2>
+<button id="copyList" class="secondary">Copy list</button>
+</div>
+<p class="muted">Ingredients from your selected recipes are added together when their names and units match.</p>
+<div id="groceryList">
+</div>
+</div>
+</section>
+<section id="editor" class="view hidden">
+<div class="panel">
+<h2 id="editorTitle">Add a family recipe</h2>
+<div class="import-panel">
+  <h3>📸 Import a recipe</h3>
+  <p class="small muted">Upload a screenshot or a photo of a recipe, or paste text. Review every ingredient before saving. Nothing is uploaded to a recognition server by this feature.</p>
+  <label for="importFile">Recipe photo or screenshot</label>
+  <input id="importFile" type="file" accept="image/*">
+  <div class="actions"><button id="scanRecipe" type="button">✨ Read image</button><button id="useImportText" type="button" class="secondary">Use pasted text</button></div>
+  <p id="importStatus" class="small muted" role="status"></p>
+  <label for="importRaw">Recognized text — correct it here if needed</label>
+  <textarea id="importRaw" placeholder="Paste a recipe here, or scan an image above..."></textarea>
+  <p class="small muted">After importing, check the recipe name, quantities, ingredient units and directions below. You decide when to save.</p>
+</div>
+<form id="recipeForm">
+<div class="form-grid">
+<div>
+<label>Recipe name</label>
+<input id="recipeName" required maxlength="120">
+</div>
+<div>
+<label>Category</label>
+<select id="category">
+<option>Dinner</option>
+<option>Breakfast</option>
+<option>Side Dish</option>
+<option>Dessert</option>
+<option>Holiday</option>
+<option>Other</option>
+</select>
+</div>
+<div>
+<label>Collection</label>
+<select id="collection">
+<option>Test Kitchen</option>
+<option>Family Approved</option>
+</select>
+</div>
+<div>
+<label>Servings</label>
+<input id="servings" type="number" min="1" max="100" value="4" required>
+</div>
+<div>
+<label>Made by / family credit</label>
+<input id="credit" placeholder="Who makes this one?">
+</div>
+<div>
+<label>Photo URL (optional)</label>
+<input id="photo" type="url" placeholder="https://...">
+</div>
+</div>
+<label>Ingredients — one per line</label>
+<p class="small muted">Format: quantity | unit | ingredient (example: 2 | cups | flour). Use the same units for ingredients you want combined. For a pinch, use 1 | pinch | salt.</p>
+<textarea id="ingredients" required placeholder="2 | cups | flour&#10;1 | tsp | salt&#10;3 | cloves | garlic">
+</textarea>
+<label>Directions</label>
+<textarea id="directions" required placeholder="Write your steps here...">
+</textarea>
+<label>Family notes / season-by-feel wisdom</label>
+<textarea id="notes" placeholder="The little details that make it yours...">
+</textarea>
+<p class="row">
+<button type="submit">Save recipe</button>
+<button type="button" id="cancelEdit" class="secondary">Cancel</button>
+</p>
+<p id="formError" class="error small" role="alert">
+</p>
+</form>
+</div>
+</section>
+</div>
+</main>
+<footer>Made for the family table · Keep the good recipes close.</footer>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import {getFirestore,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyBAr8kYtkK7sMeGtVuksNL4UuS_36tMNO4',authDomain:'cephas-family-cookbook.firebaseapp.com',projectId:'cephas-family-cookbook',storageBucket:'cephas-family-cookbook.firebasestorage.app',messagingSenderId:'501886713178',appId:'1:501886713178:web:31c7a72a6bfdeef04b4763',measurementId:'G-Y69N8VF1DN'};
+const firebase=initializeApp(firebaseConfig),auth=getAuth(firebase),db=getFirestore(firebase);const $=id=>document.getElementById(id);let recipes=[],plan={},checked={},editing=null,unsub=null;
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key='cephas-plan-v1';try{plan=JSON.parse(localStorage.getItem(key)||'{}')}catch{};const savePlan=()=>localStorage.setItem(key,JSON.stringify(plan));
+function tab(name){document.querySelectorAll('.view').forEach(el=>el.classList.toggle('hidden',el.id!==name));document.querySelectorAll('nav button').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));if(name==='plan')renderPlan();if(name==='grocery')renderGrocery();window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='editor'&&editing===null)resetEditor();tab(b.dataset.tab)});$('goGroceries').onclick=()=>tab('grocery');$('logout').onclick=()=>signOut(auth);
+$('loginForm').onsubmit=async e=>{e.preventDefault();$('loginError').textContent='';try{await signInWithEmailAndPassword(auth,$('email').value,$('password').value)}catch(err){$('loginError').textContent='Sign-in failed. Check your email and password.'}};
+onAuthStateChanged(auth,user=>{if(unsub){unsub();unsub=null} $('auth').classList.toggle('hidden',!!user);$('app').classList.toggle('hidden',!user);$('logout').classList.toggle('hidden',!user);if(user){$('password').value='';$('status').textContent='Loading family recipes…';unsub=onSnapshot(collection(db,'recipes'),snap=>{recipes=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.name.localeCompare(b.name));$('status').textContent='';renderAll()},err=>{$('status').textContent='Cannot load recipes. Check your Firestore rules and account UID: '+err.message})}else{recipes=[];renderAll()}});
+function renderAll(){renderRecipes();renderPlan();renderGrocery();$('planCount').textContent=Object.keys(plan).filter(id=>recipes.some(r=>r.id===id)).length||''}
+$('search').oninput=renderRecipes;
+function renderRecipes(){const q=$('search').value.toLowerCase();$('recipes').innerHTML='';const filtered=recipes.filter(r=>[r.name,r.category,r.collection,r.credit].join(' ').toLowerCase().includes(q));if(!filtered.length){$('recipes').innerHTML='<div class="panel">No recipes yet. Select <b>Add Recipe</b> to save your first family favorite.</div>';return}for(const r of filtered){const card=document.createElement('article');card.className='recipe';const photo=r.photo&&/^https:\/\//i.test(r.photo)?`<img class="recipe-photo" alt="" src="${escapeHTML(r.photo)}" referrerpolicy="no-referrer">`:'';card.innerHTML=`${photo}<span class="pill">${escapeHTML(r.collection||'Test Kitchen')}</span><h3>${escapeHTML(r.name)}</h3><p class="small">${escapeHTML(r.category||'Other')} · ${Number(r.servings)||4} servings ${r.credit?'· '+escapeHTML(r.credit):''}</p><details><summary>Ingredients & directions</summary><ul>${(r.ingredients||[]).map(i=>`<li>${escapeHTML(i.qty)} ${escapeHTML(i.unit)} ${escapeHTML(i.name)}</li>`).join('')}</ul><p style="white-space:pre-wrap">${escapeHTML(r.directions)}</p>${r.notes?`<p><b>Family notes:</b> ${escapeHTML(r.notes)}</p>`:''}</details><div class="actions"><button data-action="add">${plan[r.id]?'✓ Making This':'+ Making This'}</button><button class="secondary" data-action="edit">Edit</button><button class="danger" data-action="delete">Delete</button></div>`;card.querySelector('[data-action=add]').onclick=()=>{if(plan[r.id])delete plan[r.id];else plan[r.id]=Number(r.servings)||4;savePlan();renderAll()};card.querySelector('[data-action=edit]').onclick=()=>editRecipe(r);card.querySelector('[data-action=delete]').onclick=async()=>{if(confirm(`Delete ${r.name}? This cannot be undone.`)){try{await deleteDoc(doc(db,'recipes',r.id));delete plan[r.id];savePlan()}catch(e){alert(e.message)}}};$('recipes').append(card)}}
+function renderPlan(){const target=$('planList');target.innerHTML='';const selected=recipes.filter(r=>plan[r.id]);if(!selected.length){target.innerHTML='<p>No recipes selected yet. Choose “Making This” on a recipe card.</p>';return}for(const r of selected){const row=document.createElement('div');row.className='item';row.innerHTML=`<strong>${escapeHTML(r.name)}</strong><label style="margin-left:auto">Servings <input type="number" min="1" max="100" style="width:78px" value="${Number(plan[r.id])||4}"></label><button class="secondary">Remove</button>`;row.querySelector('input').onchange=e=>{plan[r.id]=Math.max(1,Math.min(100,Number(e.target.value)||1));savePlan();renderGrocery()};row.querySelector('button').onclick=()=>{delete plan[r.id];savePlan();renderAll()};target.append(row)}}
+function groceries(){const out=new Map();for(const r of recipes.filter(r=>plan[r.id])){const scale=Number(plan[r.id])/(Number(r.servings)||4);for(const i of r.ingredients||[]){const name=String(i.name||'').trim(),unit=String(i.unit||'').trim();if(!name)continue;const k=name.toLowerCase()+'|'+unit.toLowerCase();if(!out.has(k))out.set(k,{name,unit,qty:0});out.get(k).qty+=Number(i.qty)*scale}}return [...out.values()].sort((a,b)=>a.name.localeCompare(b.name))}
+const fmt=n=>Number.isInteger(n)?String(n):String(Math.round(n*100)/100);
+function renderGrocery(){const list=groceries();$('groceryList').innerHTML='';if(!list.length){$('groceryList').innerHTML='<p>Select recipes using “Making This” to generate a list.</p>';return}for(const i of list){const k=i.name.toLowerCase()+'|'+i.unit.toLowerCase();const div=document.createElement('label');div.className='item'+(checked[k]?' done':'');div.innerHTML=`<input type="checkbox" ${checked[k]?'checked':''}><span>${escapeHTML(fmt(i.qty)+' '+i.unit+' '+i.name)}</span>`;div.querySelector('input').onchange=e=>{checked[k]=e.target.checked;div.classList.toggle('done',e.target.checked)};$('groceryList').append(div)}}
+$('copyList').onclick=async()=>{const t=groceries().map(i=>`${fmt(i.qty)} ${i.unit} ${i.name}`).join('\n');if(!t)return;try{await navigator.clipboard.writeText(t);alert('Grocery list copied!')}catch{prompt('Copy your list:',t)}};
+// Import stays on this device until the user reviews and saves the recipe.
+const importStatus = message => { $('importStatus').textContent=message; };
+let tesseractLoader;
+function loadOCR(){
+  if(!tesseractLoader) tesseractLoader=new Promise((resolve,reject)=>{
+    if(window.Tesseract){resolve(window.Tesseract);return;}
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    script.onload=()=>window.Tesseract?resolve(window.Tesseract):reject(Error('OCR library did not load'));
+    script.onerror=()=>reject(Error('Could not download the OCR library. Check your internet connection.'));
+    document.head.appendChild(script);
+  }).catch(e=>{tesseractLoader=null;throw e});
+  return tesseractLoader;
+}
+$('scanRecipe').onclick=async()=>{
+  const file=$('importFile').files?.[0];
+  if(!file){importStatus('Choose an image first.');return;}
+  if(!file.type.startsWith('image/')){importStatus('Please select an image file.');return;}
+  const button=$('scanRecipe');button.disabled=true;
+  try{
+    importStatus('Loading free text recognition…');
+    const engine=await loadOCR();
+    const worker=await engine.createWorker('eng');
+    try{
+      importStatus('Reading image… This may take a moment, especially on a phone.');
+      const result=await worker.recognize(file);
+      const extracted=result.data.text.trim();
+      if(!extracted)throw Error('No readable text found. Try a clearer photo or paste the text.');
+      $('importRaw').value=extracted;
+      importStatus('Text extracted! Check it, then select “Use pasted text” to fill the recipe form.');
+    }finally{await worker.terminate()}
+  }catch(e){importStatus('Could not read image: '+e.message)}
+  finally{button.disabled=false}
+};
+const fractions={'½':.5,'¼':.25,'¾':.75,'⅓':1/3,'⅔':2/3,'⅛':.125,'⅜':.375,'⅝':.625,'⅞':.875};
+function ingredientToFields(line){
+  let raw=line.replace(/^[\s•*\-–]+/,'').trim();
+  raw=raw.replace(/^(\d+)\s+([½¼¾⅓⅔⅛⅜⅝⅞])/,(m,n,f)=>String(Number(n)+fractions[f]));
+  raw=raw.replace(/^([½¼¾⅓⅔⅛⅜⅝⅞])/,f=>String(fractions[f]));
+  const match=raw.match(/^(\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)\s*(.*)$/);
+  if(!match)return `1 | item | ${raw}`;
+  const qty=match[1].includes('/')?match[1].split('/').reduce((a,b)=>Number(a)/Number(b)):Number(match[1]);
+  let rest=match[2].trim();
+  const units=['tablespoons','tablespoon','tbsp','tbsps','teaspoons','teaspoon','tsp','cups','cup','ounces','ounce','oz','pounds','pound','lbs','lb','grams','gram','g','kilograms','kg','cloves','clove','sticks','stick','cans','can','packages','package','pinches','pinch','dashes','dash','bottles','bottle'];
+  const unitMatch=rest.match(new RegExp('^('+units.join('|')+')\\b\\.?\\s*','i'));
+  const unit=unitMatch?unitMatch[1]:'item';
+  if(unitMatch)rest=rest.slice(unitMatch[0].length);
+  return `${qty} | ${unit} | ${rest||'CHECK INGREDIENT'}`;
+}
+$('useImportText').onclick=()=>{
+  const text=$('importRaw').value.trim();
+  if(!text){importStatus('Paste text or scan an image first.');return;}
+  if(editing&&!confirm('You are editing an existing recipe. Replace its fields with imported text?'))return;
+  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const heading=/^(ingredients|directions|instructions|method|preparation|steps)(?:\s*:)?$/i;
+  let mode='intro',name='',ingredients=[],directions=[];
+  let foundHeading=false;
+  for(const line of lines){
+    if(/^ingredients\s*:?$/i.test(line)){mode='ingredients';foundHeading=true;continue;}
+    if(/^(directions|instructions|method|preparation|steps)\s*:?$/i.test(line)){mode='directions';foundHeading=true;continue;}
+    if(mode==='intro'){
+      if(!name&&!/^(prep|cook|total|servings|yield|time)\b/i.test(line))name=line;
+    }else if(mode==='ingredients')ingredients.push(line);
+    else directions.push(line);
+  }
+  if(!foundHeading){
+    name=lines[0]||'';
+    // Without clear section headings, preserve the source text instead of guessing quantities.
+    directions=lines.slice(1);
+    ingredients=[];
+  }
+  if(name)$('recipeName').value=name.slice(0,120);
+  if(ingredients.length)$('ingredients').value=ingredients.map(ingredientToFields).join('\n');
+  if(directions.length)$('directions').value=directions.join('\n');
+  importStatus(foundHeading
+    ?'Draft filled below. Verify every quantity and unit; OCR can misread fractions. Add missing information before saving.'
+    :'Could not identify ingredient/direction headings. Original text remains above. Copy ingredients into the form manually and check the directions.');
+  $('recipeName').scrollIntoView({behavior:'smooth',block:'center'});
+};
+function resetEditor(){editing=null;$('editorTitle').textContent='Add a family recipe';$('recipeForm').reset();$('servings').value=4;$('formError').textContent=''}
+$('cancelEdit').onclick=()=>{resetEditor();tab('cookbook')};
+function editRecipe(r){editing=r.id;$('editorTitle').textContent='Edit recipe';$('recipeName').value=r.name||'';$('category').value=r.category||'Other';$('collection').value=r.collection||'Test Kitchen';$('servings').value=r.servings||4;$('credit').value=r.credit||'';$('photo').value=r.photo||'';$('ingredients').value=(r.ingredients||[]).map(i=>`${i.qty} | ${i.unit} | ${i.name}`).join('\n');$('directions').value=r.directions||'';$('notes').value=r.notes||'';$('formError').textContent='';tab('editor')}
+$('recipeForm').onsubmit=async e=>{e.preventDefault();$('formError').textContent='';try{const lines=$('ingredients').value.trim().split('\n').filter(Boolean);const ingredients=lines.map((line,index)=>{const p=line.split('|').map(x=>x.trim());if(p.length!==3||!Number.isFinite(Number(p[0]))||Number(p[0])<=0||!p[2])throw Error(`Ingredient line ${index+1}: use quantity | unit | ingredient.`);return{qty:Number(p[0]),unit:p[1],name:p[2]}});const payload={name:$('recipeName').value.trim(),category:$('category').value,collection:$('collection').value,servings:Number($('servings').value),credit:$('credit').value.trim(),photo:$('photo').value.trim(),ingredients,directions:$('directions').value.trim(),notes:$('notes').value.trim(),updatedAt:serverTimestamp()};if(editing)await updateDoc(doc(db,'recipes',editing),payload);else await addDoc(collection(db,'recipes'),{...payload,createdAt:serverTimestamp()});resetEditor();tab('cookbook')}catch(err){$('formError').textContent=err.message}};
+</script></body></html>
